@@ -376,10 +376,13 @@ img {
 	}
 }
 
-/* Hide the clock and chat button */
+/* Hide the clock, chat button, Leaflet map control */
 .leaflet-control-clock,
 .clock,
 .leaflet-control-chat,
-.button--players {
+.button--players,
+.leaflet-control-zoom,
+.leaflet-control-layers
+ {
     display: none !important;
 }
