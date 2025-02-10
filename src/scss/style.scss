@@ -375,3 +375,11 @@ img {
 		size: 297mm 210mm;
 	}
 }
+
+/* Hide the clock and chat button */
+.leaflet-control-clock,
+.clock,
+.leaflet-control-chat,
+.button--players {
+    display: none !important;
+}
