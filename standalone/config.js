@@ -16,12 +16,12 @@
 
 window.config = {
  url : {
-  configuration: 'http://dynmap.local/standalone/MySQL_configuration.php',
-  update: 'http://dynmap.local/standalone/MySQL_update.php?world={world}&ts={timestamp}',
-  sendmessage: 'http://dynmap.local/standalone/MySQL_sendmessage.php',
-  login: 'http://dynmap.local/standalone/MySQL_login.php',
-  register: 'http://dynmap.local/standalone/MySQL_register.php',
-  tiles: 'http://dynmap.local/standalone/MySQL_tiles.php?tile=',
-  markers: 'http://dynmap.local/standalone/MySQL_markers.php?marker='
+  configuration: 'http://localhost/test/standalone/MySQL_configuration.php',
+  update: 'http://localhost/test/standalone/MySQL_update.php?world={world}&ts={timestamp}',
+  sendmessage: 'http://localhost/test/standalone/MySQL_sendmessage.php',
+  login: 'http://localhost/test/standalone/MySQL_login.php',
+  register: 'http://localhost/test/standalone/MySQL_register.php',
+  tiles: 'http://localhost/test/standalone/MySQL_tiles.php?tile=',
+  markers: 'http://localhost/test/standalone/MySQL_markers.php?marker='
  }
 };
