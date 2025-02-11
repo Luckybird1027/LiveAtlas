@@ -43,7 +43,7 @@ const RAW_RUNTIME_STATE =
           ["eslint", "npm:8.44.0"],\
           ["eslint-plugin-vue", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:9.15.1"],\
           ["jsdom", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:21.1.0"],\
-          ["leaflet", "npm:1.9.4"],\
+          ["leaflet", "https://github.com/JLyne/Leaflet.git#commit=af5b848e260c740de541acb6460611fedb78d1d7"],\
           ["lodash.debounce", "npm:4.0.8"],\
           ["modern-normalize", "patch:modern-normalize@npm%3A1.1.0#patches/modern-normalize+1.1.0.patch::version=1.1.0&hash=139f38&locator=live-atlas%40workspace%3A."],\
           ["rimraf", "npm:5.0.1"],\
@@ -4025,10 +4025,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["leaflet", [\
-      ["npm:1.9.4", {\
-        "packageLocation": "./.yarn/cache/leaflet-npm-1.9.4-8d372b0fe6-7b6a74d503.zip/node_modules/leaflet/",\
+      ["https://github.com/JLyne/Leaflet.git#commit=af5b848e260c740de541acb6460611fedb78d1d7", {\
+        "packageLocation": "./.yarn/cache/leaflet-https-9b60ae038b-cffebd3724.zip/node_modules/leaflet/",\
         "packageDependencies": [\
-          ["leaflet", "npm:1.9.4"]\
+          ["leaflet", "https://github.com/JLyne/Leaflet.git#commit=af5b848e260c740de541acb6460611fedb78d1d7"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -4084,7 +4084,7 @@ const RAW_RUNTIME_STATE =
           ["eslint", "npm:8.44.0"],\
           ["eslint-plugin-vue", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:9.15.1"],\
           ["jsdom", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:21.1.0"],\
-          ["leaflet", "npm:1.9.4"],\
+          ["leaflet", "https://github.com/JLyne/Leaflet.git#commit=af5b848e260c740de541acb6460611fedb78d1d7"],\
           ["lodash.debounce", "npm:4.0.8"],\
           ["modern-normalize", "patch:modern-normalize@npm%3A1.1.0#patches/modern-normalize+1.1.0.patch::version=1.1.0&hash=139f38&locator=live-atlas%40workspace%3A."],\
           ["rimraf", "npm:5.0.1"],\
