@@ -66,7 +66,18 @@ export default abstract class MapProvider implements LiveAtlasMapProvider {
 		let response;
 
 		try {
-			response = await fetch(url, options);
+			if (import.meta.env.DEV) {
+				response = await fetch(url, {
+					...options,
+					credentials: "omit",
+				});
+			} else {
+				response = await fetch(url, {
+					...options,
+					// credentials: "omit",
+				});
+			}
+
 		} catch(e) {
 			if(e instanceof DOMException && e.name === 'AbortError') {
 				console.warn(`Request aborted (${url}`);
