@@ -381,8 +381,9 @@ img {
 .clock,
 .leaflet-control-chat,
 .button--players,
-.leaflet-control-zoom,
-.leaflet-control-layers
+// .leaflet-control-zoom,
+// .leaflet-control-layers,
+.leaflet-control-coordinates
  {
     display: none !important;
 }
