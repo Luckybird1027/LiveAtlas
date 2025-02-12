@@ -17,16 +17,16 @@
  * limitations under the License.
  */
 
-import {MarkerSet} from "dynmap";
+import { MarkerSet } from "dynmap";
 import {
 	LiveAtlasMarker,
 	LiveAtlasMarkerSet,
 	LiveAtlasPlayer,
 	LiveAtlasWorldDefinition
 } from "@/index";
-import {DynmapUrlConfig} from "@/dynmap";
-import {MutationTypes} from "@/store/mutation-types";
-import {ActionTypes} from "@/store/action-types";
+import { DynmapUrlConfig } from "@/dynmap";
+import { MutationTypes } from "@/store/mutation-types";
+import { ActionTypes } from "@/store/action-types";
 import ChatError from "@/errors/ChatError";
 import MapProvider from "@/providers/MapProvider";
 import {
@@ -39,14 +39,14 @@ import {
 	buildServerConfig, buildUpdates, buildWorlds
 } from "@/util/dynmap";
 import ConfigurationError from "@/errors/ConfigurationError";
-import {DynmapTileLayer} from "@/leaflet/tileLayer/DynmapTileLayer";
-import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
-import {validateConfigURL} from "@/util";
+import { DynmapTileLayer } from "@/leaflet/tileLayer/DynmapTileLayer";
+import { LiveAtlasTileLayer, LiveAtlasTileLayerOptions } from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import { validateConfigURL } from "@/util";
 
 export default class DynmapMapProvider extends MapProvider {
 	private configurationAbort?: AbortController = undefined;
-	private	markersAbort?: AbortController = undefined;
-	private	updateAbort?: AbortController = undefined;
+	private markersAbort?: AbortController = undefined;
+	private updateAbort?: AbortController = undefined;
 
 	private updatesEnabled = false;
 	private updateTimeout: null | ReturnType<typeof setTimeout> = null;
@@ -62,38 +62,43 @@ export default class DynmapMapProvider extends MapProvider {
 	}
 
 	private validateConfig() {
-		if(typeof this.config !== 'undefined') {
+		if (typeof this.config !== 'undefined') {
 			if (!this.config || this.config.constructor !== Object) {
 				throw new ConfigurationError(`Dynmap configuration object missing`);
 			}
 
 			validateConfigURL(this.config.configuration, this.name, 'configuration');
-			validateConfigURL(this.config.update, this.name,'update');
-			validateConfigURL(this.config.markers, this.name,'markers');
-			validateConfigURL(this.config.tiles, this.name,'tiles');
-			validateConfigURL(this.config.sendmessage, this.name,'sendmessage');
+			validateConfigURL(this.config.update, this.name, 'update');
+			validateConfigURL(this.config.markers, this.name, 'markers');
+			validateConfigURL(this.config.tiles, this.name, 'tiles');
+			validateConfigURL(this.config.sendmessage, this.name, 'sendmessage');
 		}
 	}
 
 	private async getMarkerSets(world: LiveAtlasWorldDefinition): Promise<void> {
-		const url = `${this.config.markers}_markers_/marker_${encodeURIComponent(world.name)}.json`;
+		const markerUrl = `${this.config.markers}_markers_/marker_${encodeURIComponent(world.name)}.json`;
+		const mapUrl = `${this.config.markers}_markers_/marker_${encodeURIComponent(world.name)}_map.json`;
 
-		if(this.markersAbort) {
+		if (this.markersAbort) {
 			this.markersAbort.abort();
 		}
 
 		this.markersAbort = new AbortController();
 
-		const response = await this.getJSON(url, this.markersAbort.signal);
+		const markerResponse = await this.getJSON(markerUrl, this.markersAbort.signal);
 
-		response.sets = response.sets || {};
+		const mapResponse = await this.getJSON(mapUrl, this.markersAbort.signal);
 
-		for (const key in response.sets) {
-			if (!Object.prototype.hasOwnProperty.call(response.sets, key)) {
+		markerResponse.sets = markerResponse.sets || {};
+
+		mapResponse.sets = mapResponse.sets || {};
+
+		for (const key in markerResponse.sets) {
+			if (!Object.prototype.hasOwnProperty.call(markerResponse.sets, key)) {
 				continue;
 			}
 
-			const set: MarkerSet = response.sets[key],
+			const set: MarkerSet = { ...markerResponse.sets[key], icon: mapResponse.sets[key]},
 				markerSet = buildMarkerSet(key, set, this.config),
 				markers = new Map<string, LiveAtlasMarker>();
 
@@ -108,7 +113,7 @@ export default class DynmapMapProvider extends MapProvider {
 	}
 
 	async loadServerConfiguration(): Promise<void> {
-		if(this.configurationAbort) {
+		if (this.configurationAbort) {
 			this.configurationAbort.abort();
 		}
 
@@ -152,7 +157,7 @@ export default class DynmapMapProvider extends MapProvider {
 		url = url.replace('{world}', encodeURIComponent(this.store.state.currentWorld!.name));
 		url = url.replace('{timestamp}', this.updateTimestamp.getTime().toString());
 
-		if(this.updateAbort) {
+		if (this.updateAbort) {
 			this.updateAbort.abort();
 		}
 
@@ -213,7 +218,7 @@ export default class DynmapMapProvider extends MapProvider {
 		this.store.commit(MutationTypes.ADD_TILE_UPDATES, updates.tiles);
 		this.store.commit(MutationTypes.ADD_CHAT, updates.chat);
 
-		if(response.confighash) {
+		if (response.confighash) {
 			this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION_HASH, response.confighash);
 		}
 
@@ -266,8 +271,8 @@ export default class DynmapMapProvider extends MapProvider {
 		try {
 			await this.getUpdate();
 		} finally {
-			if(this.updatesEnabled) {
-				if(this.updateTimeout) {
+			if (this.updatesEnabled) {
+				if (this.updateTimeout) {
 					clearTimeout(this.updateTimeout);
 				}
 
@@ -285,20 +290,20 @@ export default class DynmapMapProvider extends MapProvider {
 
 		this.updateTimeout = null;
 
-		if(this.configurationAbort) {
+		if (this.configurationAbort) {
 			this.configurationAbort.abort();
 		}
 
-		if(this.updateAbort) {
+		if (this.updateAbort) {
 			this.updateAbort.abort();
 		}
 
-		if(this.markersAbort) {
+		if (this.markersAbort) {
 			this.markersAbort.abort();
 		}
 	}
 
-    async login(data: any) {
+	async login(data: any) {
 		if (!this.store.getters.loginEnabled) {
 			return Promise.reject(this.store.state.messages.loginErrorDisabled);
 		}
@@ -317,7 +322,7 @@ export default class DynmapMapProvider extends MapProvider {
 				body,
 			});
 
-			switch(response.result) {
+			switch (response.result) {
 				case 'success':
 					this.store.commit(MutationTypes.SET_LOGGED_IN, true);
 					return;
@@ -328,7 +333,7 @@ export default class DynmapMapProvider extends MapProvider {
 				default:
 					return Promise.reject(this.store.state.messages.loginErrorUnknown);
 			}
-		} catch(e) {
+		} catch (e) {
 			console.error(this.store.state.messages.loginErrorUnknown);
 			console.trace(e);
 			return Promise.reject(this.store.state.messages.loginErrorUnknown);
@@ -346,12 +351,12 @@ export default class DynmapMapProvider extends MapProvider {
 			});
 
 			this.store.commit(MutationTypes.SET_LOGGED_IN, false);
-		} catch(e) {
+		} catch (e) {
 			return Promise.reject(this.store.state.messages.logoutErrorUnknown);
 		}
 	}
 
-    async register(data: any) {
+	async register(data: any) {
 		if (!this.store.getters.loginEnabled) {
 			return Promise.reject(this.store.state.messages.loginErrorDisabled);
 		}
@@ -371,7 +376,7 @@ export default class DynmapMapProvider extends MapProvider {
 				body,
 			});
 
-			switch(response.result) {
+			switch (response.result) {
 				case 'success':
 					this.store.commit(MutationTypes.SET_LOGGED_IN, true);
 					return;
@@ -385,7 +390,7 @@ export default class DynmapMapProvider extends MapProvider {
 				default:
 					return Promise.reject(this.store.state.messages.registerErrorUnknown);
 			}
-		} catch(e) {
+		} catch (e) {
 			console.error(this.store.state.messages.registerErrorUnknown);
 			console.trace(e);
 			return Promise.reject(this.store.state.messages.registerErrorUnknown);
@@ -393,8 +398,8 @@ export default class DynmapMapProvider extends MapProvider {
 	}
 
 	protected async getJSON(url: string, signal: AbortSignal) {
-		return MapProvider.fetchJSON(url, {signal, credentials: 'include'}).then(response => {
-			if(response.error === 'login-required') {
+		return MapProvider.fetchJSON(url, { signal, credentials: 'include' }).then(response => {
+			if (response.error === 'login-required') {
 				this.store.commit(MutationTypes.SET_LOGIN_REQUIRED, true);
 				throw new Error("Login required");
 			}

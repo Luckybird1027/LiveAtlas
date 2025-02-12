@@ -168,7 +168,11 @@ export default defineComponent({
 	}
 
 	.marker_set_item_count {
-		position:absolute; 
+		position: absolute; 
 		right: 0%;
+	}
+
+	.marker__icon {
+		padding-right: 3%;
 	}
 </style>
