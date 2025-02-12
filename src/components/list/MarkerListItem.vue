@@ -20,7 +20,6 @@
 		<img width="16" height="16" v-if="icon" class="marker__icon" :src="icon" alt="" />
 		<SvgIcon v-else :name="defaultIcon" class="marker__icon"></SvgIcon>
 		<span class="marker__label">{{ marker.tooltip || messageUnnamed }}</span>
-		<span class="marker__location">X: {{ location.x }}, Z: {{ location.z }}</span>
 	</label>
 </template>
 
