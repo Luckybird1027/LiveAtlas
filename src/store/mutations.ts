@@ -252,6 +252,7 @@ export const mutations: MutationTree<State> & Mutations = {
 					set.priority = update.payload.priority;
 					set.label = update.payload.label;
 					set.hidden = update.payload.hidden;
+					set.icon = update.payload.icon;
 				} else { //Otherwise create
 					state.markerSets.set(update.id, {
 						id: update.id,
@@ -261,6 +262,7 @@ export const mutations: MutationTree<State> & Mutations = {
 						priority: update.payload.priority,
 						label: update.payload.label,
 						hidden: update.payload.hidden,
+						icon: update.payload.icon,
 					});
 					nonReactiveState.markers.set(update.id, new Map());
 				}

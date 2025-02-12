@@ -94,7 +94,7 @@ export default class DynmapMapProvider extends MapProvider {
 			}
 
 			const set: MarkerSet = response.sets[key],
-				markerSet = buildMarkerSet(key, set),
+				markerSet = buildMarkerSet(key, set, this.config),
 				markers = new Map<string, LiveAtlasMarker>();
 
 			buildMarkers(set.markers || {}, markers, this.config);

@@ -51,6 +51,7 @@ interface DynmapMarkerSetUpdate {
 		maxZoom: number;
 		priority: number;
 		label: string;
+		icon: string;
 	}
 }
 

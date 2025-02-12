@@ -54,6 +54,10 @@ import {LiveAtlasMarkerType} from "@/util/markers";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 import {getImagePixelSize} from "@/util/images";
 
+interface MarkerSetWithIcon extends MarkerSet {
+	icon?: string;
+  }
+
 export function buildServerConfig(response: Options): LiveAtlasServerConfig {
 	let title = 'Dynmap';
 
@@ -296,7 +300,7 @@ export function buildComponents(response: Configuration, config: DynmapUrlConfig
 	return components;
 }
 
-export function buildMarkerSet(id: string, data: MarkerSet): any {
+export function buildMarkerSet(id: string, data: MarkerSetWithIcon, config: DynmapUrlConfig): any {
 	return {
 		id,
 		label: data.label || "Unnamed set",
@@ -305,6 +309,7 @@ export function buildMarkerSet(id: string, data: MarkerSet): any {
 		showLabels: data.showlabels || undefined,
 		minZoom: typeof data.minzoom !== 'undefined' && data.minzoom > -1 ? data.minzoom : undefined,
 		maxZoom: typeof data.maxzoom !== 'undefined' && data.maxzoom > -1 ? data.maxzoom : undefined,
+		iconUrl: `${config.markers}_markers_/${data.icon || "default"}.png`,
 	}
 }
 

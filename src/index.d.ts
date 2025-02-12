@@ -204,6 +204,8 @@ interface LiveAtlasOverlay {
 
 interface LiveAtlasMarkerSet extends LiveAtlasOverlay {
 	showLabels?: boolean;
+	icon?: string;
+	iconUrl?: string;
 }
 
 interface LiveAtlasTileLayerOverlay extends LiveAtlasOverlay {

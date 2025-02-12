@@ -18,13 +18,17 @@
 	<RadioList ref="list" v-if="!currentSet" name="marker-set" :aria-labelledby="ariaLabelledby">
 		<template v-for="[id, markerSet] in markerSets" :key="id">
 			<input :id="`marker-set-${id}`" type="radio" name="marker-set" v-model="currentSet" v-bind:value="markerSet">
-			<label :for="`marker-set-${id}`">
-				<span>{{ markerSet.label || id }}</span>
-				<span>{{ markerCounts.get(markerSet) }} 个地标</span>
+			<label :for="`marker-set-${id}`" class="marker">
+				<span class="marker_set_item">
+					<img v-if="markerSet.iconUrl" width="16" height="16" class="marker__icon" :src="markerSet.iconUrl" alt="" />
+					<SvgIcon v-else name="marker_point" class="marker__icon"></SvgIcon>
+					{{ markerSet.label || id }}
+					<span class="marker_set_item_count">{{ markerCounts.get(markerSet) }} 个地标</span>
+				</span>
 			</label>
 		</template>
 	</RadioList>
-
+	
 	<template v-else>
 		<div ref="subHeader" class="markers__header">
 			<button type="button" ref="backButton" class="markers__back" @click.prevent="currentSet = undefined">
@@ -157,5 +161,14 @@ export default defineComponent({
 		text-overflow: ellipsis;
 		overflow: hidden;
 		margin: 0;
+	}
+
+	.marker_set_item {
+		position: relative;
+	}
+
+	.marker_set_item_count {
+		position:absolute; 
+		right: 0%;
 	}
 </style>
