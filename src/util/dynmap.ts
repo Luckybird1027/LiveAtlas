@@ -553,7 +553,7 @@ export function buildUpdates(data: Array<any>, lastUpdate: Date, config: DynmapU
 
 				if (entry.msg.startsWith("set")) {
 					if(!update.removed) {
-						update.payload = buildMarkerSet(set, entry);
+						update.payload = buildMarkerSet(set, entry, config);
 					}
 
 					updates.markerSets.push(Object.freeze(update as DynmapMarkerSetUpdate));
