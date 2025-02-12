@@ -17,12 +17,12 @@
  * limitations under the License.
  */
 
-import {nextTick, watch} from "vue";
-import {Control, DomEvent, DomUtil, Layer, LeafletEvent, Map as LeafletMap, Util} from 'leaflet';
+import { nextTick, watch } from "vue";
+import { Control, DomEvent, DomUtil, Layer, LeafletEvent, Map as LeafletMap, Util } from 'leaflet';
 
-import {useStore} from "@/store";
-import {MutationTypes} from "@/store/mutation-types";
-import {handleKeyboardEvent} from "@/util/events";
+import { useStore } from "@/store";
+import { MutationTypes } from "@/store/mutation-types";
+import { handleKeyboardEvent } from "@/util/events";
 import LayersObject = Control.LayersObject;
 import LayersOptions = Control.LayersOptions;
 import '@/assets/icons/layers.svg';
@@ -35,7 +35,7 @@ const store = useStore();
  * Sorts layers by position, adds additional keyboard navigation, adjusts to viewport size and tracks expanded state in vuex
  */
 export class LiveAtlasLayerControl extends Control.Layers {
-	declare _map ?: LeafletMap;
+	declare _map?: LeafletMap;
 	declare _overlaysList?: HTMLElement;
 	declare _baseLayersList?: HTMLElement;
 	declare _layerControlInputs?: HTMLElement[];
@@ -55,7 +55,7 @@ export class LiveAtlasLayerControl extends Control.Layers {
 				const priority1 = this._layerPositions.get(layer1) || 0,
 					priority2 = this._layerPositions.get(layer2) || 0;
 
-				if(priority1 !== priority2) {
+				if (priority1 !== priority2) {
 					return priority1 - priority2;
 				}
 
@@ -72,24 +72,16 @@ export class LiveAtlasLayerControl extends Control.Layers {
 
 	expand() {
 		this._layersButton!.setAttribute('aria-expanded', 'true');
-		this._section!.style.display = '';
+		// this._section!.style.display = '';
 		this.handleResize();
-
-		const firstCheckbox = this._container!.querySelector('input');
-
-		if(firstCheckbox) {
-			(firstCheckbox as HTMLElement).focus();
-		}
-
-		// @ts-ignore
-		super._checkDisabledLayers();
+		this.hideAllLayers();
 		return this;
 	}
 
 	collapse() {
 		this._layersButton!.setAttribute('aria-expanded', 'false');
-		this._section!.style.display = 'none';
-
+		// this._section!.style.display = 'none';
+		this.showAllLayers();
 		return this;
 	}
 
@@ -104,24 +96,25 @@ export class LiveAtlasLayerControl extends Control.Layers {
 		DomEvent.disableScrollPropagation(container);
 
 		//Open layer list on ArrowRight from button
-		DomEvent.on(button,'keydown', (e: Event) => {
-			if((e as KeyboardEvent).key === 'ArrowRight') {
-				store.commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {element: 'layers', state: true});
+		DomEvent.on(button, 'keydown', (e: Event) => {
+			if ((e as KeyboardEvent).key === 'ArrowRight') {
+				store.commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, { element: 'layers', state: true });
 			}
 		});
 
 		DomEvent.on(container, 'keydown', (e: Event) => {
 			//Close layer list on ArrowLeft from within list
-			if((e as KeyboardEvent).key === 'ArrowLeft') {
+			if ((e as KeyboardEvent).key === 'ArrowLeft') {
 				e.preventDefault();
-				store.commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {element: 'layers', state: false});
+				store.commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, { element: 'layers', state: false });
 				nextTick(() => button.focus());
 			}
 
 			const elements = Array.from(container.querySelectorAll('input')) as HTMLElement[];
 			handleKeyboardEvent(e as KeyboardEvent, elements);
 		});
-		DomEvent.on(button,'click', () => store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'layers'));
+		// TODO
+		DomEvent.on(button, 'click', () => store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'layers'));
 
 		section.style.display = 'none';
 
@@ -135,9 +128,9 @@ export class LiveAtlasLayerControl extends Control.Layers {
 
 		//Use vuex track expanded state
 		watch(store.state.ui.visibleElements, (newValue) => {
-			if(newValue.has('layers') && !this.visible) {
+			if (newValue.has('layers') && !this.visible) {
 				this.expand();
-			} else if(this.visible && !newValue.has('layers')) {
+			} else if (this.visible && !newValue.has('layers')) {
 				this.collapse();
 			}
 
@@ -214,7 +207,7 @@ export class LiveAtlasLayerControl extends Control.Layers {
 		DomEvent.on(input, 'click', (e: LeafletEvent) => super._onInputClick(e), this);
 
 		item.appendChild(input);
-		item.insertAdjacentHTML('beforeend',  `
+		item.insertAdjacentHTML('beforeend', `
 		<svg class="svg-icon" aria-hidden="true">
 	  		<use xlink:href="#icon--checkbox" />
 		</svg>`);
@@ -231,5 +224,39 @@ export class LiveAtlasLayerControl extends Control.Layers {
 		this._layerControlInputs = [];
 
 		(super.onRemove as Function)(map);
+	}
+
+	showAllLayers() {
+		this._iterateLayers((input, layer) => {
+			if (!this._map!.hasLayer(layer)) {
+				this._map!.addLayer(layer);
+			}
+			input.checked = true;
+		});
+	}
+
+	hideAllLayers() {
+		this._iterateLayers((input, layer) => {
+			if (this._map!.hasLayer(layer)) {
+				this._map!.removeLayer(layer);
+			}
+			input.checked = false;
+		});
+	}
+
+	private _iterateLayers(callback: (input: HTMLInputElement, layer: Layer) => void) {
+		if (!this._layerControlInputs) return;
+
+		this._layerControlInputs.forEach(input => {
+			// @ts-ignore
+			const layerId = parseInt(input.layerId);
+			// @ts-ignore
+			const layer = this._getLayer(layerId)?.layer;
+
+			if (layer) {
+				// @ts-ignore
+				callback(input, layer);
+			}
+		});
 	}
 }

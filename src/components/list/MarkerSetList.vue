@@ -20,7 +20,7 @@
 			<input :id="`marker-set-${id}`" type="radio" name="marker-set" v-model="currentSet" v-bind:value="markerSet">
 			<label :for="`marker-set-${id}`">
 				<span>{{ markerSet.label || id }}</span>
-				<span>{{ markerCounts.get(markerSet) }} Marker(s)</span>
+				<span>{{ markerCounts.get(markerSet) }} 个地标</span>
 			</label>
 		</template>
 	</RadioList>
